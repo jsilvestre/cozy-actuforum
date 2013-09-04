@@ -25,8 +25,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "coffee server.coffee"
   },
-  "repository": "",
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jsilvestre/cozy-actuforum.git"
+  },
+  "author": "Cozycloud",
   "license": "BSD",
   "readmeFilename": "README.md",
   "cozy-displayName": "ActuForum",
