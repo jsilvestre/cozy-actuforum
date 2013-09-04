@@ -1,7 +1,7 @@
 {
   "name": "cozy-actuforum",
   "version": "0.0.1",
-  "description": "",
+  "description": "ActuForum vous donne accès à toute l'actualité MesInfos par Eden",
   "main": "server.coffee",
   "dependencies": {
     "express": "~3.1.0",
