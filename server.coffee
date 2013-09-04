@@ -10,10 +10,11 @@ module.exports = app = express()
 
 app.init = ->
     configure(app)
-    clientdir = __dirname + '/client/public'
-    staticOptions = maxAge: 86400000
-    app.use '/public', express.static clientdir, staticOptions
-    app.use express.static clientdir, staticOptions
+    app.set 'views', __dirname + '/client'
+    app.engine '.html', require('jade').__express
+    # static middleware
+    app.use express.static __dirname + '/client/public',
+        maxAge: 86400000
     router(app)
     return app
 

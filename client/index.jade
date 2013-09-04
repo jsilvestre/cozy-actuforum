@@ -1,0 +1,39 @@
+doctype 5
+html(lang="fr")
+  head
+    meta(charset="utf-8")
+    title Mes Infos - L'Actualités par Eden
+    link(rel="stylesheet", href="styles/normalize.css")
+    link(rel="stylesheet", href="styles/bootstrap.css")
+    link(rel="stylesheet", href="styles/app.css")
+
+  body
+    .container
+
+      h1.text-center ActuForum : l'actualité de MesInfos par Eden
+
+      #description.panel.panel-info
+        .panel-heading
+          h3.panel-title A quoi ça sert ?
+        span.
+          Grâce à l'application ActuForum, vous serez tenu au courant de l'actualité relative au projet MesInfos et des animations organisées par Eden.
+          <br />Une notification vous parviendra à chaque fois qu'une nouvelle actualité sera publiée.
+          <br />A ce titre, nous vous conseillons de ne jamais l'arrêter !
+
+      table.table.table-striped
+        thead
+          tr
+            th.text-center Derniers articles
+            th.text-center Date de publication
+        tbody
+
+          - if (newsList.length == 0) {
+            tr
+              td.text-center(colspan="2") Aucune actualité n'a été publiée pour l'instant
+          - }
+
+          - for(news in newsList) {
+            tr
+              td.text-center.partner= news
+              td.text-center= news
+          - }
