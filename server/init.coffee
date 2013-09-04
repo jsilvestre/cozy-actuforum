@@ -1,5 +1,5 @@
 async = require 'async'
-News = require './server/models/News'
+News = require './models/news'
 
 # MapReduce's map to fetch news for a specific RSS stream
 newsByStream = (news) -> emit news.streamSource, news
