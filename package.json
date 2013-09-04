@@ -25,5 +25,11 @@
   "repository": "",
   "author": "",
   "license": "BSD",
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+  "cozy-displayName": "Eden News",
+  "cozy-permissions": {
+    "news": {
+      "description": "Permet de gérer les articles du flux d'actualité"
+    }
+  }
 }
