@@ -18,8 +18,9 @@ app.init = ->
     return app
 
 app.startRssManager = ->
-    url = "http://www.enov.fr/communauteados/index.php?option=com_kunena&view=topics&format=feed&layout=default&mode=topics&sel=720&type=rss&Itemid=149"
-    refreshRate = 5*1000 #2*3600*1000 # 2h in ms
+    url = "http://www.enov.fr/mesinfos/index.php?option=com_kunena&view=topics&format=feed&layout=default&mode=topics&catid=50&sel=720&type=rss&Itemid=149"
+
+    refreshRate = @get 'refreshTime' # see config.coffee
     rssManager = new RssManager(url, refreshRate, @)
     rssManager.initialize()
 
