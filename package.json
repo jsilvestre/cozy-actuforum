@@ -9,8 +9,8 @@
     "feedparser": "~0.15.4",
     "request": "~2.21.0",
     "socket.io": "~0.9.16",
-    "cozy-realtime-adapter": "~0.10.0",
-    "cozy-notifications-helper": "0.0.2"
+    "cozy-notifications-helper": "0.0.2",
+    "cozy-realtime-adapter": "~0.11.0"
   },
   "devDependencies": {
     "chai": "~1.5.0",
@@ -19,7 +19,8 @@
     "sinon": "~1.6.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "coffee server.coffee"
   },
   "repository": "",
   "author": "",
