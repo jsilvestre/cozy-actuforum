@@ -8,7 +8,7 @@ module.exports = class RssManager
     constructor: (@url, @refreshRate, @app) ->
         @cachedArticles = {}
         @newArticles = {}
-        @notifHelper = new NotificationsHelper 'news-mesinfos'
+        @notifHelper = new NotificationsHelper 'actuforum'
 
     initialize: ->
         @fetchFromDatabase () =>
