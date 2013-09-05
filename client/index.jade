@@ -31,9 +31,9 @@ html(lang="fr")
             tr
               td.text-center(colspan="2") Aucune actualité n'a été publiée pour l'instant
           - }
-
           - for(news in newsList) {
             tr
-              td.text-center.partner= news
-              td.text-center= news
+              td.text-center.partner
+                a(href=newsList[news].link, target="_blank")= newsList[news].title
+              td.text-center= newsList[news].formattedDate
           - }
