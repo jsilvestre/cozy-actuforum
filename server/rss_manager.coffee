@@ -39,6 +39,7 @@ module.exports = class RssManager
             .on('end', () =>
                 numNewArticles = Object.keys(@newArticles).length
                 console.log "\t# New articles: #{numNewArticles}."
+
                 for index, article of @newArticles
                     article.streamSource = article.meta.xmlUrl
                     News.create article, (err, article) =>
@@ -47,11 +48,12 @@ module.exports = class RssManager
                         else
                             @cachedArticles[article.link] = article
 
+
                 @newArticles = []
                 if numNewArticles > 0
                     @notifHelper.createTemporary
                         text: "You have #{numNewArticles} unread news from MesInfos."
-                        resource: {app: 'news-mesinfos'}
+                        resource: {app: 'actuforum'}
 
                 callback() if callback?
 
