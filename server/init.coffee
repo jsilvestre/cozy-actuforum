@@ -1,6 +1,9 @@
 async = require 'async'
 News = require './models/news'
 
+
+allNews = (news) -> emit news._id, news
+
 # MapReduce's map to fetch news for a specific RSS stream
 newsByStream = (news) -> emit news.streamSource, news
 
@@ -10,6 +13,7 @@ newsByDate = (news) -> emit news.pubDate, news
 # Create all requests
 module.exports = init = (done = ->) ->
     async.parallel [
+        (cb) -> News.defineRequest 'all', allNews, cb
         (cb) -> News.defineRequest 'newsbystream', newsByStream, cb
         (cb) -> News.defineRequest 'newsorderbydate', newsByDate, cb
     ], (err) ->
