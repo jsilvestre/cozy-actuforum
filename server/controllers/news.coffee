@@ -23,7 +23,7 @@ module.exports =
         News.getOrderByDate (err, newsList) ->
             return res.error 500, "Listing failed.", err if err?
 
-            formatter = "DD/MM/YYYY à HH[h]mm"
+            formatter = "DD/MM/YYYY"
             for news in newsList
                 formattedDate = moment(news.date).format formatter
                 news.formattedDate = formattedDate
