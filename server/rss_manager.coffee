@@ -63,9 +63,9 @@ module.exports = class RssManager
                     console.log err if err?
 
                     if numNewArticles > 0
-                    @notifHelper.createTemporary
-                        text: "Il y a #{@newArticlesCount} nouvelle(s) actualité(s) MesInfos à consulter."
-                        resource: {app: 'actuforum'}
+                        @notifHelper.createTemporary
+                            text: "Il y a #{@newArticlesCount} nouvelle(s) actualité(s) MesInfos à consulter."
+                            resource: {app: 'actuforum'}
 
                     callback() if callback?
                     console.log "\t# New articles added: #{@newArticlesCount}"
