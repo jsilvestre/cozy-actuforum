@@ -62,7 +62,7 @@ module.exports = class RssManager
                 async.eachSeries articlesAsArray, process, (err) =>
                     console.log err if err?
 
-                    if numNewArticles > 0
+                    if @newArticlesCount > 0
                         @notifHelper.createTemporary
                             text: "Il y a #{@newArticlesCount} nouvelle(s) actualité(s) MesInfos à consulter."
                             resource: {app: 'actuforum'}
