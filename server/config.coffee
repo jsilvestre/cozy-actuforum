@@ -16,7 +16,7 @@ module.exports = (app) ->
         app.use express.errorHandler
             dumpExceptions: true
             showStack: true
-        app.set 'refreshTime', 5 * 1000 # 5 seconds
+        app.set 'refreshTime', 10 * 1000 # 5 seconds
 
     #production environement
     app.configure 'production', ->

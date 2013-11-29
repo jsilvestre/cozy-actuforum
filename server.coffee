@@ -4,7 +4,6 @@ init = require './server/init'
 configure = require './server/config'
 router = require './server/router'
 RssManager = require './server/rss_manager'
-realtimeInitializer = require 'cozy-realtime-adapter'
 
 module.exports = app = express()
 
@@ -36,5 +35,4 @@ if not module.parent
             console.log "Server listening on %s:%d within %s environment",
                 host, port, app.get('env')
 
-            realtimeInitializer server: server, ['news.*']
             app.startRssManager()

@@ -1,3 +1,4 @@
+async = require 'async'
 request = require 'request'
 FeedParser = require 'feedparser'
 News = require './models/news'
@@ -6,56 +7,67 @@ NotificationsHelper = require 'cozy-notifications-helper'
 module.exports = class RssManager
 
     constructor: (@url, @refreshRate, @app) ->
-        @cachedArticles = {}
-        @newArticles = {}
+        @articles = {}
         @notifHelper = new NotificationsHelper 'actuforum'
 
     initialize: ->
-        @fetchFromDatabase () =>
-            @updateFeed () =>
-                setInterval(() =>
-                    @updateFeed()
-                , @refreshRate)
-
-    fetchFromDatabase: (callback) ->
-        News.getByStream @url, (err, news) =>
-            for index, article of news
-                @cachedArticles[article.link] = article
-
-            callback() if callback?
+        @updateFeed () =>
+            setInterval(() =>
+                @updateFeed()
+            , @refreshRate)
 
     updateFeed: (callback) ->
         console.log "=> Updating the feed..."
+        that = @
         request(@url)
             .pipe(new FeedParser())
             .on('error', (error) ->
-                console.log "ERROR"
+                console.log "**** ERROR ****"
                 console.log error
             )
-            .on('article', (article) =>
-                if not @cachedArticles[article.link]?
-                    @newArticles[article.link] = article
+            .on('readable', ->
+                stream = this
+                while item = stream.read()
+                    article = {}
+                    article.title = item.title
+                    article.description = item.description
+                    article.date = item.date
+                    article.link = item.link
+                    article.pubDate = item.pubDate
+                    article.streamSource = item.meta.xmlUrl
+                    that.articles[article.title] = article
             )
             .on('end', () =>
-                numNewArticles = Object.keys(@newArticles).length
-                console.log "\t# New articles: #{numNewArticles}."
+                numNewArticles = Object.keys(@articles).length
+                console.log "\t# Articles found: #{numNewArticles}."
+                @newArticlesCount = 0
 
-                for index, article of @newArticles
-                    article.streamSource = article.meta.xmlUrl
-                    News.create article, (err, article) =>
-                        if err
-                            console.log "Creation failed."
+                articlesAsArray = []
+                articlesAsArray.push article for title, article of @articles
+
+                process = (article, callback) =>
+                    News.alreadyExist article, (alreadyExist) =>
+
+                        if alreadyExist
+                            callback()
                         else
-                            @cachedArticles[article.link] = article
+                            News.create article, (err, article) =>
+                                if err?
+                                    msg = "Article creation failed -- #{err}"
+                                    console.log msg
+                                else
+                                    @newArticlesCount++
+                                callback()
 
+                async.eachSeries articlesAsArray, process, (err) =>
+                    console.log err if err?
 
-                @newArticles = []
-                if numNewArticles > 0
+                    if numNewArticles > 0
                     @notifHelper.createTemporary
-                        text: "You have #{numNewArticles} unread news from MesInfos."
+                        text: "Il y a #{@newArticlesCount} nouvelle(s) actualité(s) MesInfos à consulter."
                         resource: {app: 'actuforum'}
 
-                callback() if callback?
-
-                console.log "\t# Feed updated."
+                    callback() if callback?
+                    console.log "\t# New articles added: #{@newArticlesCount}"
+                    console.log "\t# Feed updated."
             )
