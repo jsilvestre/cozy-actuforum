@@ -35,6 +35,9 @@
   "cozy-permissions": {
     "news": {
       "description": "Permet de gérer les articles du flux d'actualité"
+    },
+    "notification": {
+      "description": "L'application émet des notifications pour vous prévenir quand de nouvelles actualités sont publiées"
     }
   }
 }
