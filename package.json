@@ -39,5 +39,6 @@
     "notification": {
       "description": "L'application émet des notifications pour vous prévenir quand de nouvelles actualités sont publiées"
     }
-  }
+  },
+  "cozy-widget": "/apps/actuforum/widget"
 }
