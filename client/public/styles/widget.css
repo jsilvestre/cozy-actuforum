@@ -34,7 +34,7 @@ table thead {
     font-family: styled, helvetica;
 }
 
-.application table > thead > tr > th {
+table thead th.middle {
     vertical-align: middle;
 }
 
