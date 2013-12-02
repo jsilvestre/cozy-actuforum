@@ -10,15 +10,16 @@ newsByStream = (news) -> emit news.streamSource, news
 # MapReduce's map to fetch news ordered by Date
 newsByDate = (news) -> emit news.pubDate, news
 
-allLike = (news) -> emit [news.title], news
+allLike = (news) -> emit news.title, news
 
 # Create all requests
 module.exports = init = (done = ->) ->
-    async.parallel [
+    async.series [
         (cb) -> News.defineRequest 'all', allNews, cb
         (cb) -> News.defineRequest 'newsbystream', newsByStream, cb
         (cb) -> News.defineRequest 'newsorderbydate', newsByDate, cb
         (cb) -> News.defineRequest 'allLike', allLike, cb
+        (cb) -> News.deduplicate cb
     ], (err) ->
         if err
             console.log "Something went wrong"
