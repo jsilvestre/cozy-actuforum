@@ -21,7 +21,7 @@ app.startRssManager = ->
     url = "http://www.enov.fr/mesinfos/index.php?option=com_kunena&view=topics&format=feed&layout=default&mode=topics&sel=720&type=rss&Itemid=149"
 
     refreshRate = @get 'refreshTime' # see config.coffee
-    rssManager = new RssManager(url, refreshRate, @)
+    rssManager = new RssManager url, refreshRate, @
     rssManager.initialize()
 
 if not module.parent
