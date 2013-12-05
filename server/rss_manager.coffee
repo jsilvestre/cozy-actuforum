@@ -19,55 +19,62 @@ module.exports = class RssManager
     updateFeed: (callback) ->
         console.log "=> Updating the feed..."
         that = @
-        request(@url)
-            .pipe(new FeedParser())
-            .on('error', (error) ->
-                console.log "**** ERROR ****"
-                console.log error
-            )
-            .on('readable', ->
-                stream = this
-                while item = stream.read()
-                    article = {}
-                    article.title = item.title
-                    article.description = item.description
-                    article.date = item.date
-                    article.link = item.link
-                    article.pubDate = item.pubDate
-                    article.streamSource = item.meta.xmlUrl
-                    that.articles[article.title] = article
-            )
-            .on('end', () =>
-                numNewArticles = Object.keys(@articles).length
-                console.log "\t# Articles found: #{numNewArticles}."
-                @newArticlesCount = 0
+        options =
+            url: @url
+            timeout: 15000
+        request(options, (error, res, body) ->
+            if error?
+                console.log "Request to data source has failed -- #{error}"
+                callback() if callback?
+        )
+        .pipe(new FeedParser())
+        .on('error', (error) ->
+            console.log "**** ERROR ****"
+            console.log error
+        )
+        .on('readable', ->
+            stream = this
+            while item = stream.read()
+                article = {}
+                article.title = item.title
+                article.description = item.description
+                article.date = item.date
+                article.link = item.link
+                article.pubDate = item.pubDate
+                article.streamSource = item.meta.xmlUrl
+                that.articles[article.title] = article
+        )
+        .on('end', =>
+            numNewArticles = Object.keys(@articles).length
+            console.log "\t# Articles found: #{numNewArticles}."
+            @newArticlesCount = 0
 
-                articlesAsArray = []
-                articlesAsArray.push article for title, article of @articles
+            articlesAsArray = []
+            articlesAsArray.push article for title, article of @articles
 
-                process = (article, callback) =>
-                    News.alreadyExist article, (alreadyExist) =>
+            process = (article, callback) =>
+                News.alreadyExist article, (alreadyExist) =>
 
-                        if alreadyExist
+                    if alreadyExist
+                        callback()
+                    else
+                        News.create article, (err, article) =>
+                            if err?
+                                msg = "Article creation failed -- #{err}"
+                                console.log msg
+                            else
+                                @newArticlesCount++
                             callback()
-                        else
-                            News.create article, (err, article) =>
-                                if err?
-                                    msg = "Article creation failed -- #{err}"
-                                    console.log msg
-                                else
-                                    @newArticlesCount++
-                                callback()
 
-                async.eachSeries articlesAsArray, process, (err) =>
-                    console.log err if err?
+            async.eachSeries articlesAsArray, process, (err) =>
+                console.log err if err?
 
-                    if @newArticlesCount > 0
-                        @notifHelper.createTemporary
-                            text: "Il y a #{@newArticlesCount} nouvelle(s) actualité(s) MesInfos à consulter."
-                            resource: {app: 'actuforum'}
+                if @newArticlesCount > 0
+                    @notifHelper.createTemporary
+                        text: "Il y a #{@newArticlesCount} nouvelle(s) actualité(s) MesInfos à consulter."
+                        resource: {app: 'actuforum'}
 
-                    callback() if callback?
-                    console.log "\t# New articles added: #{@newArticlesCount}"
-                    console.log "\t# Feed updated."
-            )
+                callback() if callback?
+                console.log "\t# New articles added: #{@newArticlesCount}"
+                console.log "\t# Feed updated."
+        )
