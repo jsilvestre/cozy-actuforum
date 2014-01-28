@@ -1,5 +1,6 @@
 News = require '../models/news'
-
+Entities = require('html-entities').AllHtmlEntities
+entities = new Entities()
 moment = require 'moment'
 
 module.exports =
@@ -12,8 +13,7 @@ module.exports =
             for news in newsList
                 formattedDate = moment(news.date).format formatter
                 news.formattedDate = formattedDate
-                title =  news.title
-                news.title = title.substr(0, title.indexOf('- par'))
+                news.title = entities.decode news.title
 
             res.render 'index.jade', newsList: newsList, (err, html) ->
                 console.log err if err?
@@ -27,8 +27,7 @@ module.exports =
             for news in newsList
                 formattedDate = moment(news.date).format formatter
                 news.formattedDate = formattedDate
-                title =  news.title
-                news.title = title.substr(0, title.indexOf('- par'))
+                news.title = entities.decode news.title
 
             res.render 'widget.jade', newsList: newsList, (err, html) ->
                 console.log err if err?

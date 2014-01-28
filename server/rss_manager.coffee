@@ -41,7 +41,7 @@ module.exports = class RssManager
                 article.date = item.date
                 article.link = item.link
                 article.pubDate = item.pubDate
-                article.streamSource = item.meta.xmlUrl
+                article.streamSource = item.link
                 that.articles[article.title] = article
         )
         .on('end', =>
