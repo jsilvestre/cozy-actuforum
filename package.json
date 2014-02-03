@@ -12,7 +12,8 @@
     "jade": "0.35.0",
     "jugglingdb": "0.2.5",
     "jugglingdb-cozy-adapter": "0.4.3",
-    "moment": "2.4.0"
+    "moment": "2.4.0",
+    "html-entities": "1.0.10"
   },
   "devDependencies": {
     "chai": "1.8.1",
